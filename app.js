@@ -1,5 +1,5 @@
 'use strict';
-let products = [];
+var products = [];
 let previousIndexes = [];
 let roundsOfVoting = 25;
 let results = document.getElementById('results');
