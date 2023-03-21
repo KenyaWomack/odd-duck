@@ -1,24 +1,52 @@
 <!DOCTYPE html>
+
+<link rel="reset" href="reset.css">
+<link rel="stylesheet" href="style.css">
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/style.css">
-  <title>Vote on Ducks!</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<header>
+    <nav>
+
+        <h1> Let The Voting Begin! </h1>
+    </nav>
+</header>
+
 <body>
-  <header>
-    <h1>Vote Tracking</h1>
-  </header>
-  <main>
-    <section id="vote-tracker">
-      <img src=""id="image-1">
-      <img src=""id="image-2">
-      <img src=""id="image-3">
+    <section>
+        <p>Results</p>
+        <ul id="results">
+            <Li></Li>
+         </ul>
+         <button id="button" type="button">View Results</button>
     </section>
-    <section id="results"></section>
-  </main>
-  <script src="app.js"></script>
+    <section id="vote-tracker">
+        <img alt="">
+        <img alt="">
+        <img alt="">
+    </section>
+    <section>
+        <p class="information">
+        </p>
+    </section>
+    <section id="chartResults">
+        <canvas id="chart" height="300" width="300"></canvas>
+        <button id="update-chart">Update Chart</button>
+      </section>
 </body>
+
+<footer>
+    <p>
+        Maintained By Kenya Womack &copy;
+    </p>
+</footer>
+<script src="app.js"></script>
+
 </html>

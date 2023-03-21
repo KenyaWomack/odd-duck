@@ -1,115 +1,152 @@
 'use strict';
 
-const state = [];
+const products = [];
 let roundsOfVoting = 25;
+let results = document.getElementById('results');
+let chart = null;
 
-function Image(name, source) {
-  this.name = name;
-  this.timesClicked = 0;
-  this.timesShown = 0;
-  this.source = source;
-  state.push(this);
+function photos(name, source) {
+    this.name = name;
+    this.timesClicked = 0;
+    this.timesShown = 0;
+    this.source = source;
 }
 
-new Image('bag','imgs/bag.jpg');
-new Image('banana','imgs/banana.jpg');
-new Image('bathroom','imgs/bathroom.jpg');
-new Image('boots','imgs/boots.jpg');
-new Image('breakfast','imgs/breakfast.jpg');
-new Image('bubblegum','imgs/bubblegum.jpg');
-new Image('chair','imgs/chair.jpg');
-new Image('cthulhu','imgs/cthulhu.jpg');
-new Image('dog-duck','imgs/dog-duck.jpg');
-new Image('dragon','imgs/dragon.jpg');
-new Image('pen','imgs/pen.jpg');
-new Image('pet-sweep','imgs/pet-sweep.jpg');
-new Image('scissors','imgs/scissors.jpg');
-new Image('shark','imgs/shark.jpg');
-new Image('sweep','imgs/sweep.png');
-new Image('tauntaun','imgs/tauntaun.jpg');
-new Image('unicorn','imgs/unicorn.jpg');
-new Image('water-can','imgs/water-can.jpg');
-new Image('wine-glass','imgs/wine-glass.jpg');
+products.push(new photos('banana', 'imgs/banana.jpg'));
+products.push(new photos('bathroom', 'imgs/bathroom.jpg'));
+products.push(new photos('boots', 'imgs/boots.jpg'));
+products.push(new photos('breakfast', 'imgs/breakfast.jpg'));
+products.push(new photos('bubblegum', 'imgs/bubblegum.jpg'));
+products.push(new photos('chair', 'imgs/chair.jpg'));
+products.push(new photos('cthulhu', 'imgs/cthulhu.jpg'));
+products.push(new photos('dog-duck', 'imgs/dog-duck.jpg'));
+products.push(new photos('dragon', 'imgs/dragon.jpg'));
+products.push(new photos('pen', 'imgs/pen.jpg'));
+products.push(new photos('pet-sweep', 'imgs/pet-sweep.jpg'));
+products.push(new photos('scissors', 'imgs/scissors.jpg'));
+products.push(new photos('shark', 'imgs/shark.jpg'));
+products.push(new photos('bag', 'imgs/bag.jpg'));
+products.push(new photos('sweep', 'imgs/sweep.png'));
+products.push(new photos('tauntaun', 'imgs/tauntaun.jpg'));
+products.push(new photos('unicorn', 'imgs/unicorn.jpg'));
+products.push(new photos('water-can', 'imgs/water-can.jpg'));
+products.push(new photos('wine-glass', 'imgs/wine-glass.jpg'));
 
-let imgEls = document.querySelectorAll('img'); 
-let imageOne=document.getElementById('image-1');
-let imageTwo=document.getElementById('image-2');
-let imageThree=document.getElementById('image-3');
-let voteTrackerEl = document.getElementById('vote-tracker'); 
+let imgElp = document.querySelectorAll('img');
+let voteTrackerEl = document.getElementById('vote-tracker');
+let buttonEl = document.getElementById('button');
+const canvasEl = document.getElementById('chart');
 
-console.log("CURRENTLY RENDERED IMAGES", imgEls);
+imgElp[0].src = products[0].source;
+imgElp[0].id = products[0].name;
+imgElp[1].src = products[1].source;
+imgElp[1].id = products[1].name;
+imgElp[2].src = products[2].source;
+imgElp[2].id = products[2].name;
 
-console.log('CURRENT STATE', state);
+function generateRandomimgs() {
+    const index = new Set();
+    while (index.size < 3) {
+        const randomIndex = Math.floor(Math.random() * products.length)
+        if (!index.has(randomIndex)) {
+            index.add(randomIndex);
+        }
+    };
+    const uniqueIndex = Array.from(index);
 
-imageOne.src = state[0].source;
-// imgEls[0].id = state[0].name;
-imageTwo.src = state[1].source;
-// imgEls[1].id = state[1].name;
-imageThree.src = state[2].source;
-// imgEls[2].id = state[2].name;
-renderDuck();
-
-function generateRandomDuck() {
-  return Math.floor(Math.random() * state.length);
+    return uniqueIndex;
 }
 
-function renderDuck() {
-  // find some goats from state
-  let duck1 = state[generateRandomDuck()];
-  let duck2 = state[generateRandomDuck()];
-  console.log('DUCKS to re-render', imgEls, duck1, duck2);
-  while (duck1.name === duck2.name){
-    duck2 = state[generateRandomDuck()];
-  }
-  // this should garuantee fresh goats
-  imgEls[0].src = duck1.source; // this makes things render
-  imgEls[0].id = duck1.name;
-  duck1.timesShown += 1;
-  imgEls[1].src = duck2.source;
-  imgEls[1].id = duck2.name;
-  duck2.timesShown += 1;
+function renderimgs() {
+    let indexes = generateRandomimgs();
+
+    let photos = products[generateRandomimgs()];
+
+    imgElp[0].src = products[indexes[0]].source;
+    imgElp[0].id = products[indexes[0]].name;
+    products[indexes[0]].timesShown++;
+    imgElp[1].src = products[indexes[1]].source
+    imgElp[1].id = products[indexes[1]].name;
+    products[indexes[1]].timesShown++;
+    imgElp[2].src = products[indexes[2]].source;
+    imgElp[2].id = products[indexes[2]].name;
+    products[indexes[2]].timesShown++;
 }
+renderimgs();
 
-function handleDuckClick(event) {
-  console.log(event.target); // event.target always represents the exact element where an event occurred.
+function handleClick(event) {
+    let productThatWasClicked = event.target.value;
+    console.log(productThatWasClicked);
+    };
 
-  // identify which image was clicked on??
-  let duckThatWasClicked = event.target.id;
-  state.forEach(image => {
-    if (image.name === duckThatWasClicked) {
-      image.timesClicked += 1; // mutation of an object
+function handleProductClick(event) {
+    let productThatWasClicked = event.target.id;
+    console.log(productThatWasClicked);
+    products.forEach(image => {
+        if (image.name === productThatWasClicked) {
+            image.timesClicked += 1;
+        }
+    });
+    if (roundsOfVoting) {
+        renderimgs();
+        roundsOfVoting--;
+    } else {
+        voteTrackerEl.removeEventListener('click', handleProductClick);
+        buttonEl.addEventListener('click', renderData);
+        drawChart();
+        console.log("chart drwan")
+        
     }
-  });
-  console.log('UPDATED STATE', state);
-
-  // re-render new goat images -> random goat image from state
-  if (roundsOfVoting) {
-    renderDucks();
-    roundsOfVoting--;
-  } else {
-    voteTrackerEl.removeEventListener('click', handleDuckClick);
-  }
 }
 
-voteTrackerEl.addEventListener('click', handleDuckClick);
+voteTrackerEl.addEventListener('click', handleProductClick);
 
-// let eventId = voteTrackerEl.addEventListener('click', function(event) {
-//   console.log(event.target); // event.target always represents the exact element where an event occurred.
+function renderData(event) {
+    let buttonClicked = event.target.id;
+    products.forEach(products => {
+        let listItemEl = document.createElement('li');
+        let parentContainerEl = document.getElementById('results');
+        parentContainerEl.appendChild(listItemEl);
+        listItemEl.textContent = `${products.name} had ${products.timesClicked} votes, and was shown ${products.timesShown} times.`;
+        products.timesClicked;
+        products.timesShown;
+    });
+}
 
-//   // identify which image was clicked on??
-//   let goatThatWasClicked = event.target.id;
-//   state.forEach(image => {
-//     if (image.name === goatThatWasClicked) {
-//       image.timesClicked += 1; // mutation of an object
-//     }
-//   });
-//   console.log('UPDATED STATE', state);
+ 
+let chartObj = document.getElementById('chart').getContext("2d");
 
-//   // re-render new goat images -> random goat image from state
-//   if (roundsOfVoting) {
-//     renderGoats();
-//     roundsOfVoting--;
-//   } else {
-//     voteTrackerEl.removeEventListener('click', eventId);
-//   }
-// });
+function drawChart() {
+    let labels = []
+    let timesShownValues = [];
+    let timesClickedValues = []
+    products.forEach(products => {
+        labels.push(products.name);
+        timesShownValues.push(products.timesShown);
+        timesClickedValues.push(products.timesClicked);
+    });
+   
+
+    chart = new Chart(chartObj, {
+        type: 'bar',
+        data: {
+            labels: labels, 
+            datasets: [{
+                label: 'Times Shown',
+                data: timesShownValues, 
+                borderWidth: 1
+            }, {
+                label: 'Times Clicked',
+                data: timesClickedValues, 
+                borderWidth: 1
+            }], 
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
