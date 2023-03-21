@@ -37,3 +37,9 @@ img {
   border: thin solid red;
   background-color: white;
 }
+
+footer {
+  position: fixed;
+  height: 75px;
+  width: 100vw;
+}

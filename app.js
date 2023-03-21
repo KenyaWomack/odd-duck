@@ -1,67 +1,67 @@
 'use strict';
-
-const products = [];
+let products = [];
+let previousIndexes = [];
 let roundsOfVoting = 25;
 let results = document.getElementById('results');
 let chart = null;
-
 function photos(name, source) {
     this.name = name;
     this.timesClicked = 0;
     this.timesShown = 0;
     this.source = source;
 }
-
-products.push(new photos('banana', 'imgs/banana.jpg'));
-products.push(new photos('bathroom', 'imgs/bathroom.jpg'));
-products.push(new photos('boots', 'imgs/boots.jpg'));
-products.push(new photos('breakfast', 'imgs/breakfast.jpg'));
-products.push(new photos('bubblegum', 'imgs/bubblegum.jpg'));
-products.push(new photos('chair', 'imgs/chair.jpg'));
-products.push(new photos('cthulhu', 'imgs/cthulhu.jpg'));
-products.push(new photos('dog-duck', 'imgs/dog-duck.jpg'));
-products.push(new photos('dragon', 'imgs/dragon.jpg'));
-products.push(new photos('pen', 'imgs/pen.jpg'));
-products.push(new photos('pet-sweep', 'imgs/pet-sweep.jpg'));
-products.push(new photos('scissors', 'imgs/scissors.jpg'));
-products.push(new photos('shark', 'imgs/shark.jpg'));
-products.push(new photos('bag', 'imgs/bag.jpg'));
-products.push(new photos('sweep', 'imgs/sweep.png'));
-products.push(new photos('tauntaun', 'imgs/tauntaun.jpg'));
-products.push(new photos('unicorn', 'imgs/unicorn.jpg'));
-products.push(new photos('water-can', 'imgs/water-can.jpg'));
-products.push(new photos('wine-glass', 'imgs/wine-glass.jpg'));
-
+function createProducts() {
+    if (localStorage.getItem('products')) {
+        products = JSON.parse(localStorage.getItem('products'));
+    }
+    else {
+        products.push(new photos('Banana', 'imgs/banana.jpg'));
+        products.push(new photos('Bathroom', 'imgs/bathroom.jpg'));
+        products.push(new photos('Boots', 'imgs/boots.jpg'));
+        products.push(new photos('Breakfast', 'imgs/breakfast.jpg'));
+        products.push(new photos('Bubblegum', 'imgs/bubblegum.jpg'));
+        products.push(new photos('Chair', 'imgs/chair.jpg'));
+        products.push(new photos('Cthulhu', 'imgs/cthulhu.jpg'));
+        products.push(new photos('Dog-Duck', 'imgs/dog-duck.jpg'));
+        products.push(new photos('Dragon', 'imgs/dragon.jpg'));
+        products.push(new photos('Pen', 'imgs/pen.jpg'));
+        products.push(new photos('Pet-Sweep', 'imgs/pet-sweep.jpg'));
+        products.push(new photos('Scissors', 'imgs/scissors.jpg'));
+        products.push(new photos('Shark', 'imgs/shark.jpg'));
+        products.push(new photos('Bag', 'imgs/bag.jpg'));
+        products.push(new photos('Sweep', 'imgs/sweep.png'));
+        products.push(new photos('Tauntaun', 'imgs/tauntaun.jpg'));
+        products.push(new photos('Unicorn', 'imgs/unicorn.jpg'));
+        products.push(new photos('Water-Can', 'imgs/water-can.jpg'));
+        products.push(new photos('Wine-Glass', 'imgs/wine-glass.jpg'));
+    }
+}
+createProducts();
 let imgElp = document.querySelectorAll('img');
 let voteTrackerEl = document.getElementById('vote-tracker');
 let buttonEl = document.getElementById('button');
 const canvasEl = document.getElementById('chart');
-
+let buttonResetEl = document.getElementById('reset-chart');
 imgElp[0].src = products[0].source;
 imgElp[0].id = products[0].name;
 imgElp[1].src = products[1].source;
 imgElp[1].id = products[1].name;
 imgElp[2].src = products[2].source;
 imgElp[2].id = products[2].name;
-
-function generateRandomimgs() {
+function generateRandomImages() {
     const index = new Set();
     while (index.size < 3) {
         const randomIndex = Math.floor(Math.random() * products.length)
-        if (!index.has(randomIndex)) {
+        if (!index.has(randomIndex) && !previousIndexes.includes(randomIndex)) {
             index.add(randomIndex);
         }
     };
     const uniqueIndex = Array.from(index);
-
+    previousIndexes = uniqueIndex;
     return uniqueIndex;
 }
-
-function renderimgs() {
-    let indexes = generateRandomimgs();
-
-    let photos = products[generateRandomimgs()];
-
+function renderImages() {
+    let indexes = generateRandomImages();
     imgElp[0].src = products[indexes[0]].source;
     imgElp[0].id = products[indexes[0]].name;
     products[indexes[0]].timesShown++;
@@ -72,35 +72,27 @@ function renderimgs() {
     imgElp[2].id = products[indexes[2]].name;
     products[indexes[2]].timesShown++;
 }
-renderimgs();
-
-function handleClick(event) {
-    let productThatWasClicked = event.target.value;
-    console.log(productThatWasClicked);
-    };
-
+renderImages();
 function handleProductClick(event) {
     let productThatWasClicked = event.target.id;
-    console.log(productThatWasClicked);
+    // console.log(productThatWasClicked);
     products.forEach(image => {
         if (image.name === productThatWasClicked) {
             image.timesClicked += 1;
         }
     });
     if (roundsOfVoting) {
-        renderimgs();
+        renderImages();
         roundsOfVoting--;
     } else {
         voteTrackerEl.removeEventListener('click', handleProductClick);
         buttonEl.addEventListener('click', renderData);
         drawChart();
-        console.log("chart drwan")
-        
+        console.log("chart draw")
+        writeData();
     }
 }
-
 voteTrackerEl.addEventListener('click', handleProductClick);
-
 function renderData(event) {
     let buttonClicked = event.target.id;
     products.forEach(products => {
@@ -112,10 +104,7 @@ function renderData(event) {
         products.timesShown;
     });
 }
-
- 
 let chartObj = document.getElementById('chart').getContext("2d");
-
 function drawChart() {
     let labels = []
     let timesShownValues = [];
@@ -125,28 +114,72 @@ function drawChart() {
         timesShownValues.push(products.timesShown);
         timesClickedValues.push(products.timesClicked);
     });
-   
-
     chart = new Chart(chartObj, {
         type: 'bar',
         data: {
-            labels: labels, 
+            labels: labels,
             datasets: [{
                 label: 'Times Shown',
-                data: timesShownValues, 
-                borderWidth: 1
+                data: timesShownValues,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
             }, {
                 label: 'Times Clicked',
-                data: timesClickedValues, 
-                borderWidth: 1
-            }], 
+                data: timesClickedValues,
+                backgroundColor: 'rgba(255, 99, 132, 3)',
+                borderColor: 'rgba(255, 99, 132, 10)',
+            }],
         },
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    ticks: {
+                        font: {
+                            size: 30
+                        },
+                    },
                 }
             }
+        },
+        x: {
+            ticks: {
+                font: {
+                    size: 30
+                },
+            },
         }
     });
+    chart.canvas.parentNode.style.height = '1200px';
+    chart.canvas.parentNode.style.width = '1200px';
 }
+function writeData() {
+    localStorage.setItem('photos', JSON.stringify(products));
+}
+function readData() {
+    return JSON.parse(localStorage.getItem('photos')) || [];
+}
+products = readData();
+// console.log(products);
+function updateChart(event) {
+    event.preventDefault();
+    console.log(event.target.name);
+    let name = event.target.name.value;
+    let source = event.target.source.value;
+    products.forEach(products => {
+        if (products.name === name) {
+            products.source = source;
+        }
+    });
+    readData();
+    drawChart();
+}
+
+
+
+
+
+
+
+
+
+
