@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-<link rel="reset" href="reset.css">
-<link rel="stylesheet" href="style.css">
 
 <html lang="en">
 
@@ -9,13 +7,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting Results</title>
+    <title>Voting</title>
+    
+    <link rel="reset" href="reset.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <header>
     <nav>
 
-        <h1> Let The Voting Begin! </h1>
+        <h1> Vote For Your Fave!!! </h1>
     </nav>
 </header>
 
@@ -24,27 +25,28 @@
         <p>Results</p>
         <ul id="results">
             <Li></Li>
-         </ul>
-         <button id="button" type="button">View Results</button>
+        </ul>
+        <button id="button" type="button">View Results</button>
     </section>
     <section id="vote-tracker">
-        <img alt="">
-        <img alt="">
-        <img alt="">
+        <img alt="" id="imageOne">
+        <img alt="" id="imageTwo">
+        <img alt="" id="imageThree">
     </section>
     <section>
         <p class="information">
+            Click on your favorite pic!
         </p>
     </section>
     <section id="chartResults">
-        <canvas id="chart" height="300" width="300"></canvas>
-        <button id="update-chart">Update Chart</button>
-      </section>
+        <canvas id="chart"></canvas>
+        <button id="reset-chart">Reset Chart</button>
+    </section>
 </body>
 
 <footer>
     <p>
-        Maintained By Kenya Womack &copy;
+        Site Maintained by Kenya &copy;
     </p>
 </footer>
 <script src="app.js"></script>
